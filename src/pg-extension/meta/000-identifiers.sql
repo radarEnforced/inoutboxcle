@@ -11,16 +11,58 @@
 
 set search_path=meta,public;
 
+-- type
 create type meta.schema_id as (
     name text
 );
 
-
+----------- text --------------
+-- constructor(text)
 create function meta.schema_id(name text) returns meta.schema_id as $$
     select row(name)::meta.schema_id
 $$ language sql immutable;
 
+-- cast(text as schema_id)
+create cast (text as meta.schema_id)
+with function meta.schema_id(text)
+as assignment;
 
+create function meta.text(schema_id meta.schema_id) returns text as $$
+    select (schema_id).name
+$$ language sql immutable;
+
+create cast (meta.schema_id as text)
+with function meta.text(meta.schema_id)
+as assignment;
+
+create function meta.eq(
+    leftarg meta.schema_id,
+    rightarg text
+) returns boolean as $$
+    select (leftarg).name = rightarg;
+$$ language sql;
+
+create operator = (
+    leftarg = meta.schema_id,
+    rightarg = text,
+    procedure = meta.eq
+);
+
+create function meta.eq(
+    leftarg text,
+    rightarg meta.schema_id
+) returns boolean as $$
+    select leftarg = (rightarg).name;
+$$ language sql;
+
+
+create operator = (
+    leftarg = text,
+    rightarg = meta.schema_id,
+    procedure = meta.eq
+);
+
+----------- json --------------
 create function meta.eq(
     leftarg meta.schema_id,
     rightarg json
@@ -44,6 +86,7 @@ $$ immutable language sql;
 create cast (json as meta.schema_id)
 with function meta.schema_id(json)
 as assignment;
+
 
 
 /******************************************************************************

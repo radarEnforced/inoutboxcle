@@ -55,7 +55,7 @@ create or replace function blob_hash_gen_trigger() returns trigger as $$
             return NULL;
         end if;
 
-        NEW.hash = public.digest(NEW.value, 'sha256');
+        NEW.hash = public.digest(NEW.value::text, 'sha256');
         if exists (select 1 from bundle.blob b where b.hash = NEW.hash) then
             return NULL;
         end if;

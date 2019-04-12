@@ -51,7 +51,7 @@ create or replace function commit (bundle_name text, message text) returns void 
     raise notice 'bundle: Committing stage_row_fields...';
     -- FIELDS: copy all the fields in stage_row_field to the new rowset's fields
     insert into bundle.rowset_row_field (rowset_row_id, field_id, value_hash)
-    select rr.id, f.field_id, public.digest(value, 'sha256')
+    select rr.id, f.field_id, public.digest(value::text, 'sha256')
     from bundle.rowset_row rr
     join bundle.rowset r on r.id=new_rowset_id and rr.rowset_id=r.id
     join bundle.stage_row_field f on (f.field_id).row_id = rr.row_id;
@@ -486,7 +486,7 @@ create or replace function checkout_row (in row_id meta.row_id, in fields checko
             query_str := query_str
                 || ')'
                 || ' where ' || quote_ident((row_id.pk_column_id).name)
-                || '::text = ' || quote_literal(row_id.pk_value) || '::text'; -- cast them both to text instead of look up the column's type... maybe lazy?
+                || '::text = ' || quote_literal(row_id.pk_value) || '::text'; -- cast them both to text instead of look up the column's type... maybe lazy? NO!  correct.
 
             -- raise log 'query_str: %', query_str;
 
