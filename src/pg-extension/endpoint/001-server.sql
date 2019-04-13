@@ -813,11 +813,11 @@ create function endpoint.row_select(
         )) q
         into include;
 
-        if exclude is not null or include is not null then
+        -- if exclude is not null or include is not null then
             select endpoint.column_list(_schema_name, _relation_name, '', exclude, include) into column_list;
-        else
-            select '*' into column_list;
-        end if;
+        -- else
+        --    select '*' into column_list;
+        -- end if;
 
 
         row_query := 'select ''[{"row": '' || row_to_json(t.*, true) || ''}]'' from ' ||
@@ -1088,7 +1088,7 @@ create function endpoint.column_list(
         end if;
 
         execute
-            'select string_agg(' || quote_literal(table_alias) || ' || ''.'' || name, '', '')
+            'select string_agg(' || quote_literal(table_alias) || ' || ''.'' || name, ''::text, '')
             from meta.relation_column
             where schema_name = ' || quote_literal(_schema_name) || ' and
                 relation_name = ' || quote_literal(_relation_name) ||
@@ -1147,11 +1147,11 @@ create function endpoint.rows_select(
         )) q
         into include;
 
-        if exclude is not null or include is not null then
+        -- if exclude is not null or include is not null then
             select endpoint.column_list(schema_name, relation_name, 'r'::text, exclude, include) into column_list;
-        else
-            select 'r.*' into column_list;
-        end if;
+        -- else
+        --    select 'r.*' into column_list;
+        -- end if;
 
         row_query := 'select ''['' || string_agg(q.js, '','') || '']'' from (
                           select ''{ "row":'' || row_to_json(t.*, true) || '' }'' js
@@ -1961,7 +1961,7 @@ create function endpoint.register (_email text,
 as $$
 
     declare
-	_user_row record;
+    _user_row record;
         _role_id meta.role_id;
 
     begin
